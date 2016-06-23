@@ -130,24 +130,25 @@ def run_programs(app, doctree):
         output_rst = ''
 
         #Convert JSON into HTML formatted definition list
-        for group in output['groups']:
-            if 'title' in group and group['title']:
-                output_rst += '<div class="cli-group-title">' + str(group['title'])
-                if group['description']:
-                    output_rst += '<p>' + str(markdown.markdown(group['description'])) + '</p>'
-                output_rst += '</div>'
-            output_rst += '<dl class="dl-horizontal dl-multiline docutils">'
-            for action in group['actions']:
-                if(action['option_strings'] or action['help']):
-                    output_rst += '<dt>' + ' / '.join(action['option_strings']) + '</dt>'
-                    output_rst += '<dd>' + str(action['help']) + '</dd>'
+        if 'groups' in output:
+            for group in output['groups']:
+                if 'title' in group and group['title']:
+                    output_rst += '<div class="cli-group-title">' + str(group['title'])
+                    if group['description']:
+                        output_rst += '<p>' + str(markdown.markdown(group['description'])) + '</p>'
+                    output_rst += '</div>'
+                output_rst += '<dl class="dl-horizontal dl-multiline docutils">'
+                for action in group['actions']:
+                    if(action['option_strings'] or action['help']):
+                        output_rst += '<dt>' + ' / '.join(action['option_strings']) + '</dt>'
+                        output_rst += '<dd>' + str(action['help']) + '</dd>'
 
-                if  action['action'] == 'parsers':
-                  for key in sorted(action['choices']):
-                      output_rst += '<dt>' + str(key) + '</dt>'
-                      output_rst += '<dd>' + str(action['choices'][key]) + '</dd>'
+                    if  action['action'] == 'parsers':
+                      for key in sorted(action['choices']):
+                          output_rst += '<dt>' + str(key) + '</dt>'
+                          output_rst += '<dd>' + str(action['choices'][key]) + '</dd>'
 
-            output_rst += '</dl>'
+                output_rst += '</dl>'
 
         new_node = node_class('', output_rst, format='html')
         new_node['language'] = 'text'
